@@ -1,0 +1,548 @@
+---
+title: "React Performance Optimization: A Complete Guide for 2025"
+excerpt: "Master React performance optimization with the latest techniques including React 19 features, advanced memoization strategies, and real-world performance patterns."
+description: "Comprehensive guide to React performance optimization covering React 19 features, memoization, and advanced performance patterns."
+date: "2025-01-10"
+author: "Rohmad Sasmito"
+readTime: "12 min read"
+category: "Frontend"
+image: "https://images.unsplash.com/photo-1551033406-611cf9a28f67?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyZWFjdCUyMHBlcmZvcm1hbmNlfGVufDB8fHx8MTYyOTEyMzQ1Ng&ixlib=rb-4.0.3&q=80&w=1080"
+imageAlt: "React performance optimization dashboard showing metrics and code"
+tags: ["React", "Performance", "Optimization", "JavaScript", "Frontend", "React 19"]
+featured: false
+published: true
+draft: false
+---
+
+## Introduction
+
+React performance optimization has evolved significantly with the introduction of React 19 and its concurrent features. This comprehensive guide covers modern optimization techniques that will make your React applications faster and more responsive in 2025.
+
+## Core Performance Principles
+
+### Understanding React's Rendering Process
+
+React's rendering process involves several phases:
+
+1. **Trigger**: State change or prop update
+2. **Render**: Component function execution
+3. **Commit**: DOM updates
+4. **Effects**: Side effect execution
+
+```javascript
+// Understanding render phases
+function ExpensiveComponent({ data }) {
+  console.log('Render phase') // Runs during render
+
+  useEffect(() => {
+    console.log('Commit phase') // Runs after DOM update
+  })
+
+  return <div>{processData(data)}</div>
+}
+```
+
+### React 19 Performance Features
+
+#### Server Components
+
+```jsx
+// Server Component (runs on server)
+async function BlogPost({ id }) {
+  const post = await fetchPost(id) // Server-side data fetching
+
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <ClientContent content={post.content} />
+    </article>
+  )
+}
+
+// Client Component (interactive)
+'use client'
+function ClientContent({ content }) {
+  const [expanded, setExpanded] = useState(false)
+
+  return (
+    <div>
+      {expanded ? content : content.slice(0, 100)}
+      <button onClick={() => setExpanded(!expanded)}>
+        {expanded ? 'Show Less' : 'Show More'}
+      </button>
+    </div>
+  )
+}
+```
+
+#### Concurrent Features
+
+```jsx
+import { useDeferredValue, useTransition } from 'react'
+
+function SearchResults({ query }) {
+  const [isPending, startTransition] = useTransition()
+  const deferredQuery = useDeferredValue(query)
+
+  const handleSearch = (newQuery) => {
+    startTransition(() => {
+      // Non-urgent update
+      updateSearchResults(newQuery)
+    })
+  }
+
+  return (
+    <div>
+      {isPending && <div>Searching...</div>}
+      <Results query={deferredQuery} />
+    </div>
+  )
+}
+```
+
+## Advanced Memoization Strategies
+
+### Smart Component Memoization
+
+```jsx
+import { memo, useMemo, useCallback } from 'react'
+
+// Memoize expensive computations
+function DataVisualization({ data, filters }) {
+  const processedData = useMemo(() => {
+    return data
+      .filter(filters.predicate)
+      .map(filters.transformer)
+      .sort(filters.comparator)
+  }, [data, filters])
+
+  return <Chart data={processedData} />
+}
+
+// Memoize components wisely
+const ExpensiveChart = memo(function Chart({ data, config }) {
+  return <ComplexVisualization data={data} config={config} />
+}, (prevProps, nextProps) => {
+  // Custom comparison
+  return (
+    prevProps.data.length === nextProps.data.length &&
+    prevProps.config.type === nextProps.config.type
+  )
+})
+```
+
+### Callback Optimization
+
+```jsx
+function TodoList({ todos, onToggle, onDelete }) {
+  // ❌ Bad: Creates new functions on every render
+  const badApproach = todos.map(todo => (
+    <TodoItem
+      key={todo.id}
+      todo={todo}
+      onToggle={() => onToggle(todo.id)}
+      onDelete={() => onDelete(todo.id)}
+    />
+  ))
+
+  // ✅ Good: Memoized item component
+  const MemoizedTodoItem = memo(({ todo, onToggle, onDelete }) => (
+    <TodoItem
+      todo={todo}
+      onToggle={useCallback(() => onToggle(todo.id), [todo.id, onToggle])}
+      onDelete={useCallback(() => onDelete(todo.id), [todo.id, onDelete])}
+    />
+  ))
+
+  return (
+    <ul>
+      {todos.map(todo => (
+        <MemoizedTodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={onToggle}
+          onDelete={onDelete}
+        />
+      ))}
+    </ul>
+  )
+}
+```
+
+## Virtual Scrolling and Windowing
+
+### Implementing Virtual Scrolling
+
+```jsx
+import { FixedSizeList as List } from 'react-window'
+
+function VirtualizedList({ items }) {
+  const Row = ({ index, style }) => (
+    <div style={style}>
+      <ListItem data={items[index]} />
+    </div>
+  )
+
+  return (
+    <List
+      height={400}
+      itemCount={items.length}
+      itemSize={50}
+      overscanCount={5} // Render extra items for smooth scrolling
+    >
+      {Row}
+    </List>
+  )
+}
+
+// Custom windowing for dynamic heights
+function DynamicList({ items }) {
+  const getItemSize = useCallback((index) => {
+    // Calculate dynamic height based on content
+    return items[index].content.length > 100 ? 120 : 80
+  }, [items])
+
+  return (
+    <VariableSizeList
+      height={400}
+      itemCount={items.length}
+      itemSize={getItemSize}
+      estimatedItemSize={80}
+    >
+      {Row}
+    </VariableSizeList>
+  )
+}
+```
+
+## Code Splitting and Lazy Loading
+
+### Strategic Code Splitting
+
+```jsx
+import { lazy, Suspense } from 'react'
+
+// Route-based splitting
+const Dashboard = lazy(() => import('./Dashboard'))
+const Profile = lazy(() => import('./Profile'))
+const Analytics = lazy(() =>
+  import('./Analytics').then(module => ({
+    default: module.Analytics
+  }))
+)
+
+// Component-based splitting
+const HeavyChart = lazy(() => import('./HeavyChart'))
+
+function App() {
+  return (
+    <Router>
+      <Suspense fallback={<PageSkeleton />}>
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/analytics" element={<Analytics />} />
+        </Routes>
+      </Suspense>
+    </Router>
+  )
+}
+```
+
+### Preloading Strategies
+
+```jsx
+// Preload on hover
+function NavigationLink({ to, children }) {
+  const handleMouseEnter = () => {
+    // Preload the route component
+    import(`./pages${to}`)
+  }
+
+  return (
+    <Link to={to} onMouseEnter={handleMouseEnter}>
+      {children}
+    </Link>
+  )
+}
+
+// Intersection Observer for lazy loading
+function LazyImage({ src, alt }) {
+  const [isLoaded, setIsLoaded] = useState(false)
+  const imgRef = useRef()
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsLoaded(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (imgRef.current) {
+      observer.observe(imgRef.current)
+    }
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div ref={imgRef}>
+      {isLoaded ? (
+        <img src={src} alt={alt} loading="lazy" />
+      ) : (
+        <div className="image-placeholder" />
+      )}
+    </div>
+  )
+}
+```
+
+## State Management Optimization
+
+### Reducer Performance Patterns
+
+```jsx
+import { useReducer, useMemo } from 'react'
+
+// Optimized reducer with normalization
+function todosReducer(state, action) {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.todo.id]: action.todo
+        },
+        allIds: [...state.allIds, action.todo.id]
+      }
+
+    case 'TOGGLE_TODO':
+      return {
+        ...state,
+        byId: {
+          ...state.byId,
+          [action.id]: {
+            ...state.byId[action.id],
+            completed: !state.byId[action.id].completed
+          }
+        }
+      }
+
+    default:
+      return state
+  }
+}
+
+function TodoApp() {
+  const [state, dispatch] = useReducer(todosReducer, initialState)
+
+  // Memoized selectors
+  const completedTodos = useMemo(
+    () => state.allIds.filter(id => state.byId[id].completed),
+    [state.byId, state.allIds]
+  )
+
+  const activeTodos = useMemo(
+    () => state.allIds.filter(id => !state.byId[id].completed),
+    [state.byId, state.allIds]
+  )
+
+  return (
+    <div>
+      <ActiveTodos todos={activeTodos} dispatch={dispatch} />
+      <CompletedTodos todos={completedTodos} dispatch={dispatch} />
+    </div>
+  )
+}
+```
+
+### Context Optimization
+
+```jsx
+// Split contexts by update frequency
+const UserContext = createContext()
+const ThemeContext = createContext()
+const NotificationsContext = createContext()
+
+// Optimized provider
+function AppProvider({ children }) {
+  const [user, setUser] = useState(null)
+  const [theme, setTheme] = useState('light')
+  const [notifications, setNotifications] = useState([])
+
+  // Separate contexts prevent unnecessary re-renders
+  return (
+    <UserContext.Provider value={useMemo(() => ({ user, setUser }), [user])}>
+      <ThemeContext.Provider value={useMemo(() => ({ theme, setTheme }), [theme])}>
+        <NotificationsContext.Provider value={useMemo(() => ({ notifications, setNotifications }), [notifications])}>
+          {children}
+        </NotificationsContext.Provider>
+      </ThemeContext.Provider>
+    </UserContext.Provider>
+  )
+}
+```
+
+## Performance Monitoring
+
+### Custom Performance Hooks
+
+```jsx
+// Performance timing hook
+function usePerformanceTimer(name) {
+  useEffect(() => {
+    const startTime = performance.now()
+
+    return () => {
+      const endTime = performance.now()
+      console.log(`${name}: ${endTime - startTime}ms`)
+
+      // Send to analytics
+      if (window.gtag) {
+        window.gtag('event', 'timing_complete', {
+          name,
+          value: Math.round(endTime - startTime)
+        })
+      }
+    }
+  }, [name])
+}
+
+// Render tracking
+function useRenderCount() {
+  const renderCount = useRef(0)
+
+  useEffect(() => {
+    renderCount.current += 1
+  })
+
+  return renderCount.current
+}
+
+function ExpensiveComponent() {
+  usePerformanceTimer('ExpensiveComponent')
+  const renderCount = useRenderCount()
+
+  console.log(`Rendered ${renderCount} times`)
+
+  return <div>Content</div>
+}
+```
+
+### Performance DevTools Integration
+
+```jsx
+// Profiler integration
+function ProfiledComponent({ children, id }) {
+  return (
+    <Profiler
+      id={id}
+      onRender={(id, phase, actualDuration) => {
+        if (actualDuration > 16) { // Flag slow renders
+          console.warn(`Slow render: ${id} took ${actualDuration}ms`)
+        }
+      }}
+    >
+      {children}
+    </Profiler>
+  )
+}
+```
+
+## Bundle Optimization
+
+### Webpack Bundle Analysis
+
+```javascript
+// webpack.config.js
+module.exports = {
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: 10,
+          enforce: true,
+        },
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          priority: 20,
+          enforce: true,
+        },
+        common: {
+          minChunks: 2,
+          name: 'common',
+          priority: 5,
+          enforce: true,
+        },
+      },
+    },
+  },
+}
+```
+
+### Tree Shaking Optimization
+
+```jsx
+// ✅ Good: Import only what you need
+import { debounce } from 'lodash/debounce'
+import { format } from 'date-fns/format'
+
+// ❌ Bad: Imports entire library
+import _ from 'lodash'
+import * as dateFns from 'date-fns'
+
+// Custom utility with tree shaking
+export const utils = {
+  debounce: (fn, delay) => { /* implementation */ },
+  throttle: (fn, limit) => { /* implementation */ },
+  format: (date, pattern) => { /* implementation */ }
+}
+```
+
+## Real-World Performance Checklist
+
+### Development Checklist
+
+- [ ] Use React DevTools Profiler regularly
+- [ ] Implement proper error boundaries
+- [ ] Avoid anonymous functions in JSX
+- [ ] Use keys properly in lists
+- [ ] Implement proper loading states
+- [ ] Monitor bundle size changes
+- [ ] Use TypeScript for better DX
+- [ ] Implement proper SEO meta tags
+
+### Production Checklist
+
+- [ ] Enable React production build
+- [ ] Implement CDN for static assets
+- [ ] Use proper caching strategies
+- [ ] Monitor Core Web Vitals
+- [ ] Implement service workers
+- [ ] Use performance monitoring tools
+- [ ] Optimize images and fonts
+- [ ] Implement proper error tracking
+
+## Conclusion
+
+React performance optimization in 2025 requires a holistic approach combining React 19's new features with proven optimization techniques. Focus on:
+
+1. **Measuring first**: Use profiling tools to identify bottlenecks
+2. **Strategic optimization**: Don't optimize everything, focus on impact
+3. **User experience**: Optimize for perceived performance
+4. **Monitoring**: Continuously track performance metrics
+
+Remember, the best optimization is the one that improves user experience without compromising code maintainability.
+
+---
+
+*Want to dive deeper into React performance? Check out my [Performance Workshop Series](https://github.com/herohmad/react-performance-workshop) with hands-on examples.*
