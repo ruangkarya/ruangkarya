@@ -1,60 +1,35 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with **RuangKarya** - a free portfolio & blog static site generator with premium convenience add-ons.
+This file provides guidance to Claude Code (claude.ai/code) when working with **RuangKarya** - a modern portfolio & blog static site generator.
 
 ## Product Identity
 
-**RuangKarya** is a free, open-source portfolio & blog SSG designed for developers who value freedom and sustainability.
+**RuangKarya** is an open-source portfolio & blog SSG designed for developers who value simplicity and performance.
 
-- **Domain**: ruangkarya.space
+- **Domain**: ruangkarya.netlify.app
 - **Repository**: RuangKarya (product name)
-- **Monetization Model**: TailwindCSS-style (free core + premium convenience)
-- **Philosophy**: "Free ≠ cheap • Paid ≠ mandatory • Paid = convenience"
+- **Philosophy**: "This is a tool, not a service"
 
-## Product Development Constraints
+## Core Principles
 
-### Core Principles (NEVER VIOLATE)
+1. **Production-Ready Open Source**
 
-1. **Free Core Must Be Genuinely Usable**
-   - Never artificially limit core functionality
-   - Free version must be production-ready, not a demo
-   - All essential features remain free forever
+   - All core functionality is open source
+   - Production-ready out of the box
+   - No artificial limitations
 
-2. **Premium = Convenience Only**
-   - Premium features can only be convenience/time-savers
-   - Examples: premium themes, starter templates, design assets
-   - NEVER: core functionality, essential features, or blocking limitations
+2. **Zero Vendor Lock-in**
 
-3. **Zero Vendor Lock-in**
    - Must work with free hosting (Netlify, Vercel, Cloudflare Pages)
    - No mandatory paid APIs or services
    - Git-based workflow only
    - Static output only (no server dependencies)
 
-### Development Guidelines
-
-#### What's Always Free
-- Complete SSG engine and build system
-- Portfolio and blog functionality
-- All UI components (shadcn/ui based)
-- SEO features (RSS, sitemap, meta tags)
-- Theme switching and responsive design
-- Type-safe content management (Velite)
-- Basic themes and layouts
-
-#### What Can Be Premium
-- Additional premium themes/layouts
-- Ready-made starter templates
-- Advanced configuration templates
-- Professional design assets
-- Premium component libraries (as convenience)
-- Time-saving boilerplates
-
-#### Architecture Requirements
-- **Free hosting friendly**: Static files only
-- **No database dependencies**: File-based content management
-- **Minimal external dependencies**: Avoid paid services in core
-- **Self-contained**: Can run without external APIs
+3. **Architecture Requirements**
+   - **Free hosting friendly**: Static files only
+   - **No database dependencies**: File-based content management
+   - **Minimal external dependencies**: Avoid paid services
+   - **Self-contained**: Can run without external APIs
 
 ## Repository Structure
 
@@ -170,32 +145,13 @@ pnpm generate:sitemap          # Generate sitemap
 - Sitemap generation (`/sitemap.xml`)
 - Canonical URLs and proper meta descriptions
 
-## Monetization Guidelines
-
-### Pricing Strategy
-
-- **Anti-customer-support-oriented pricing**
-- USD $15-29 range for premium assets (avoid $5-10 to filter expectations)
-- One-time purchase only (no subscriptions)
-- Clear messaging: "This is a tool, not a service"
-
-### Support Philosophy
+## Support Philosophy
 
 - Best-effort support only
 - No SLA promises
 - No custom feature guarantees
 - No guaranteed roadmap
 - Encourage self-service and community support
-
-### Premium Asset Guidelines
-
-When developing premium features:
-
-1. **Never block core functionality**
-2. **Focus on convenience and time-saving**
-3. **Maintain separate repositories for premium assets**
-4. **Ensure free version remains genuinely usable**
-5. **Document clear boundaries between free and premium**
 
 ## Important Notes
 
@@ -206,7 +162,7 @@ When developing premium features:
 - **Content Location**: Blog posts are stored in `content/posts/` as Markdown/MDX files
 - **CMS Access**: Decap CMS available at `/admin` after deployment setup
 - **Alias Configuration**: `@/` points to `./src`, `#site/content` points to `./.velite`
-- **Domain**: ruangkarya.space (all references should use this domain)
+- **Domain**: ruangkarya.netlify.app (all references should use this domain)
 
 ## Content Management
 
@@ -245,13 +201,11 @@ This project follows sustainable development practices:
 
 When working on RuangKarya:
 
-1. Always maintain the free/premium boundary
-2. Ensure free version remains fully functional
-3. Use ruangkarya.space domain in all references
-4. Follow sustainable development practices
-5. Keep dependencies minimal and free-hosting friendly
-6. Document any new features clearly
-7. Test on free hosting platforms
+1. Use ruangkarya.netlify.app domain in all references
+2. Follow sustainable development practices
+3. Keep dependencies minimal and free-hosting friendly
+4. Document any new features clearly
+5. Test on free hosting platforms
 
 ## Additional Resources
 
@@ -262,13 +216,13 @@ When working on RuangKarya:
 
 ---
 
-**Remember**: RuangKarya is a tool for developers who value freedom, sustainability, and genuine open-source principles. Every decision should reflect these values.
+**Remember**: RuangKarya is a tool for developers who value simplicity, performance, and genuine open-source principles. Every decision should reflect these values.
 
 # important-instruction-reminders
+
 Do what has been asked; nothing more, nothing less.
 NEVER create files unless they're absolutely necessary for achieving your goal.
 ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
-
+NEVER proactively create documentation files (\*.md) or README files. Only create documentation files if explicitly requested by the User.
 
       IMPORTANT: this context may or may not be relevant to your tasks. You should not respond to this context unless it is highly relevant to your task.

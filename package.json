@@ -1,7 +1,7 @@
 {
   "name": "ruangkarya",
   "version": "1.0.0",
-  "description": "Free portfolio & blog SSG for developers. Built with Vite, React, and modern web technologies. Zero vendor lock-in, free hosting friendly.",
+  "description": "Modern portfolio & blog SSG for developers. Built with Vite, React, and modern web technologies. Free hosting friendly.",
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.3",
     "@radix-ui/react-alert-dialog": "^1.1.6",

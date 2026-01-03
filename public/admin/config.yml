@@ -13,21 +13,120 @@ collections:
     create: true # Allow users to create new documents in this collection
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}" # Filename template, e.g., YYYY-MM-DD-title.md
     fields: # The fields for each document, usually in front matter
-      - { label: "Title", name: "title", widget: "string", hint: "SEO-optimized title (max 99 characters)", pattern: [".{1,99}", "Must be between 1-99 characters"] }
-      - { label: "Excerpt", name: "excerpt", widget: "text", hint: "Brief description for listings (max 300 characters)", pattern: [".{1,300}", "Must be between 1-300 characters"] }
-      - { label: "Description", name: "description", widget: "string", required: false, hint: "Optional meta description (max 200 characters)", pattern: ["^.{0,200}$", "Must be less than 200 characters"] }
-      - { label: "Publish Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
-      - { label: "Updated Date", name: "updated", widget: "datetime", required: false, date_format: "YYYY-MM-DD", time_format: false }
-      - { label: "Author", name: "author", widget: "string", default: "Your Name" }
-      - { label: "Read Time", name: "readTime", widget: "string", default: "5 min read", hint: "Estimated reading time (e.g., '5 min read')" }
-      - { label: "Category", name: "category", widget: "select", options: ["Frontend", "Backend", "DevOps", "Design", "Tutorial", "Opinion", "News"] }
-      - { label: "Featured Image", name: "image", widget: "image", required: false, hint: "Main image for the post (optional)" }
-      - { label: "Image Alt Text", name: "imageAlt", widget: "string", required: false, hint: "Accessibility description for the featured image" }
-      - { label: "Tags", name: "tags", widget: "list", allow_add: true, collapsed: false, field: { label: "Tag", name: "tag", widget: "string" } }
-      - { label: "Featured", name: "featured", widget: "boolean", default: false, hint: "Show in featured posts section" }
-      - { label: "Published", name: "published", widget: "boolean", default: false, hint: "Make post visible on site" }
-      - { label: "Draft", name: "draft", widget: "boolean", default: true, hint: "Mark as draft (will not be published even if Published is true)" }
-      - { label: "Body", name: "body", widget: "markdown", hint: "Main content of the post. Supports Markdown and MDX." }
+      - {
+          label: "Title",
+          name: "title",
+          widget: "string",
+          hint: "SEO-optimized title (max 99 characters)",
+          pattern: [".{1,99}", "Must be between 1-99 characters"],
+        }
+      - {
+          label: "Excerpt",
+          name: "excerpt",
+          widget: "text",
+          hint: "Brief description for listings (max 300 characters)",
+          pattern: [".{1,300}", "Must be between 1-300 characters"],
+        }
+      - {
+          label: "Description",
+          name: "description",
+          widget: "string",
+          required: false,
+          hint: "Optional meta description (max 200 characters)",
+          pattern: ["^.{0,200}$", "Must be less than 200 characters"],
+        }
+      - {
+          label: "Publish Date",
+          name: "date",
+          widget: "datetime",
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+        }
+      - {
+          label: "Updated Date",
+          name: "updated",
+          widget: "datetime",
+          required: false,
+          date_format: "YYYY-MM-DD",
+          time_format: false,
+        }
+      - {
+          label: "Author",
+          name: "author",
+          widget: "string",
+          default: "Your Name",
+        }
+      - {
+          label: "Read Time",
+          name: "readTime",
+          widget: "string",
+          default: "5 min read",
+          hint: "Estimated reading time (e.g., '5 min read')",
+        }
+      - {
+          label: "Category",
+          name: "category",
+          widget: "select",
+          options:
+            [
+              "Frontend",
+              "Backend",
+              "DevOps",
+              "Design",
+              "Tutorial",
+              "Opinion",
+              "News",
+            ],
+        }
+      - {
+          label: "Featured Image",
+          name: "image",
+          widget: "image",
+          required: false,
+          hint: "Main image for the post (optional)",
+        }
+      - {
+          label: "Image Alt Text",
+          name: "imageAlt",
+          widget: "string",
+          required: false,
+          hint: "Accessibility description for the featured image",
+        }
+      - {
+          label: "Tags",
+          name: "tags",
+          widget: "list",
+          allow_add: true,
+          collapsed: false,
+          field: { label: "Tag", name: "tag", widget: "string" },
+        }
+      - {
+          label: "Featured",
+          name: "featured",
+          widget: "boolean",
+          default: false,
+          hint: "Show in featured posts section",
+        }
+      - {
+          label: "Published",
+          name: "published",
+          widget: "boolean",
+          default: false,
+          hint: "Make post visible on site",
+        }
+      - {
+          label: "Draft",
+          name: "draft",
+          widget: "boolean",
+          default: true,
+          hint: "Mark as draft (will not be published even if Published is true)",
+        }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown",
+          hint: "Main content of the post. Supports Markdown and MDX.",
+        }
 
   - name: "pages"
     label: "Pages"
@@ -38,16 +137,21 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Description", name: "description", widget: "text" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Published", name: "published", widget: "boolean", default: false }
+      - {
+          label: "Published",
+          name: "published",
+          widget: "boolean",
+          default: false,
+        }
       - { label: "Body", name: "body", widget: "markdown" }
 
 # Editorial workflow: allows posts to be saved as drafts and reviewed before publishing
 publish_mode: editorial_workflow
 
 # Site configuration
-site_url: https://ruangkarya.space
-display_url: https://ruangkarya.space
-logo_url: https://ruangkarya.space/logo.png
+site_url: https://ruangkarya.netlify.app
+display_url: https://ruangkarya.netlify.app
+logo_url: https://ruangkarya.netlify.app/logo.png
 
 # Local backend for development
 local_backend: true

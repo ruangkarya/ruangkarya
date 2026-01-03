@@ -29,7 +29,7 @@ const posts = defineCollection({
       ...data,
       slug: meta.basename.replace(/\.(md|mdx)$/, ""),
       path: `/blog/${meta.basename.replace(/\.(md|mdx)$/, "")}`,
-      permalink: `https://ruangkarya.space/blog/${meta.basename.replace(
+      permalink: `https://ruangkarya.netlify.app/blog/${meta.basename.replace(
         /\.(md|mdx)$/,
         ""
       )}`,
